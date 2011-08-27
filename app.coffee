@@ -7,6 +7,7 @@ nko('n710A/A4SZeui+7c')
 
 zappa port, ->
   enable 'serve jquery'
+  io.set 'transports', ['xhr-polling', 'websocket', 'flashsocket', 'htmlfile']
 
   publicDir = __dirname + '/public'
   use 'logger', 'bodyParser', 'cookieParser', express.session({secret: 'collaborative coffee'})
