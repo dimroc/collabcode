@@ -17,6 +17,9 @@ zappa port, ->
   # a collection of views and functionality used in subsequent includes.
   include 'base.coffee'
 
+  # handles all the schemas and models used app side mapped to a mongo collection/document.
+  include 'models.coffee'
+
   # actual resources for the website.
   include 'collab.coffee'
   include 'root.coffee'

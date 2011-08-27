@@ -1,7 +1,7 @@
 @include = ->
   get '/collab/:id': ->
     console.log "[TRACE] retrieve id #{@id}"
-    render 'collab', layout: no
+    render 'collab'
 
   client '/collab.js': ->
     $().ready ->
