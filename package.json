@@ -1,0 +1,11 @@
+{
+    "name": "socketio-playground"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+      "express": "2.4.6"
+    , "sass": ">= 0.0.1"
+    , "socket.io": "0.7.x"
+    , "zappa": "0.2.x"
+  }
+}
