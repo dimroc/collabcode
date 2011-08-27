@@ -10,7 +10,5 @@
     , "zappa": "0.2.x"
     , "mongoose": "2.0.x"
   }
-//  , "scripts": { "start": "coffee app.coffee" 
-//  }
   , "engine": "node 0.4.x"
 }
