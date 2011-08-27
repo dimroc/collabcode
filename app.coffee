@@ -14,5 +14,9 @@ zappa port, ->
     development: -> use errorHandler: {dumpExceptions: on, showStack: on}
     production: -> use 'errorHandler'
 
+  # a collection of views and functionality used in subsequent includes.
+  include 'base.coffee'
+
+  # actual resources for the website.
   include 'collab.coffee'
   include 'root.coffee'

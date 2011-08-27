@@ -1,7 +1,7 @@
 @include = ->
   get '/': ->
     console.log '[TRACE] at root "/"'
-    render 'index', layout: no
+    render 'index'
 
   at wannabe: ->
     console.log '[TRACE] received message wannabe!'
@@ -17,13 +17,6 @@
       emit 'wannabe', nickname: prompt('pick a nickname')
 
   view index: ->
-    doctype 5
-    html ->
-      head ->
-        title 'collab coding'
-        script src: '/socket.io/socket.io.js'
-        script src: '/zappa/jquery.js'
-        script src: '/zappa/zappa.js'
-        script src: '/root.js'
-      body ->
-        div id: 'panel'
+    div id: 'panel', ->
+      p 'welcome'
+    script src: '/root.js'

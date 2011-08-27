@@ -7,3 +7,4 @@ tmp/
 .swp
 node_modules/
 tags
+.sass-cache/

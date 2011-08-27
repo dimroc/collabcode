@@ -4,8 +4,9 @@
   , "private": true
   , "dependencies": {
       "express": "2.4.6"
-    , "sass": ">= 0.0.1"
+    , "sass": "0.5.x"
     , "socket.io": "0.7.x"
     , "zappa": "0.2.x"
+    , "mongoose": "2.0.x"
   }
 }
