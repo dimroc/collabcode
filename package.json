@@ -1,5 +1,5 @@
 {
-    "name": "socketio-playground"
+    "name": "collab-code"
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {
@@ -10,7 +10,7 @@
     , "zappa": "0.2.x"
     , "mongoose": "2.0.x"
   }
-  , "scripts": { "start": "coffee app.coffee" 
-  }
+//  , "scripts": { "start": "coffee app.coffee" 
+//  }
   , "engine": "node 0.4.x"
 }
