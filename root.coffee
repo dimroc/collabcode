@@ -1,12 +1,12 @@
 @include = ->
-  requiring 'emailjs', 'os', 'net'
+  requiring 'emailjs', 'os', 'net', 'url'
 
   # I'm not happy with this, but node searches for modules relative
   # to where zappa launches which is deep in the node_modules dir.
   # TODO: find better way to require modules in project base dir.
   def murmurhash: require '../../../murmurhash3_gc.js'
 
-  helper send_collab_email_helper: (email_address, collab_code) ->
+  helper send_collab_email_helper: (email_address, collab) ->
     # send email
     username = process.env.SENDGRID_USERNAME || 'app820434@heroku.com'
     password = process.env.SENDGRID_PASSWORD || '69720811bbfb6510c7'
@@ -20,42 +20,54 @@
       ssl: true
     })
 
+    text_to_send =
+      '''Code collaborators, interviewers, job candidates, and whoever, share code here:
+
+        '''
+    text_to_send += "#{collab.site}"
+      
     server.send({
       from: "#{username}",
       to: "#{email_address}",
-      subject: "[Collab][Code] Collab Site Created"
-      text: "i hope this works #{collab_code}",
+      subject: "[Collab][Code] Collab Site Created",
+      text: text_to_send
     }, (err, message) -> console.log(err || message))
 
   get '/': ->
-    console.log '[TRACE] at root "/"'
+    console.log '[TRACE] request URL ' + request.url
     render 'index'
 
   at collab_requested: ->
     console.log '[TRACE] received collab request with email ' + @email
+    current_date = new Date()
     if @email?
-      collab_code = murmurhash.murmurhash(@email, new Date().getTime())
+      collab_code = murmurhash.murmurhash(@email, current_date.getTime())
     else
-      collab_code = murmurhash.murmurhash('collab_key' + new Date().getTime(), new Date().getTime())
+      collab_code = murmurhash.murmurhash('collab_key' + current_date.getTime(), current_date.getTime())
     collab_code = collab_code.toString 16
 
     console.log '[TRACE] got code ' + collab_code
-    collab_site = os.hostname() + ':' + app.address().port + "/collabs/#{collab_code}"
+    base_address = process.env.DOMAIN || app.address().address + ':' + app.address().port
+
+    collab_site = 'http://' + base_address + "/collabs/#{collab_code}"
     console.log '[TRACE] got site ' + collab_site
     collab = { site: collab_site, code: collab_code }
 
     console.log '[TRACE] dispatching collab ' + JSON.stringify collab
-    io.sockets.emit 'collab_created', collab: collab
+    emit 'collab_created', collab: collab
 
     if @email?
-      send_collab_email_helper @email, collab.code
+      send_collab_email_helper @email, collab
       
   client '/root.js': ->
     connect()
 
     at collab_created: ->
       console.log 'client received collab site ' + JSON.stringify @collab
-      $('#collab_info').append("<ul><li><a href='collabs/#{@collab.code}'>" + @collab.site + '</a></li></ul>')
+      $('#collab_info').append(
+        "<ul><li><a href='collabs/#{@collab.code}'>" + 
+        document.URL + "collabs/#{@collab.code}" + 
+        '</a></li></ul>')
 
     $().ready ->
       $('#collab_button').click ->
