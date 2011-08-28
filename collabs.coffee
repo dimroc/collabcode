@@ -1,11 +1,13 @@
 @include = ->
+  requiring 'timer'
+  enable 'serve jquery'
   get '/collabs': ->
     redirect '/'
 
   get '/collabs/:id': ->
     console.log "[TRACE] retrieve id #{@id}"
-    src_prefix = '/javascripts/ace/'
-    modes = [
+
+    ace_modes = [
       {name: 'text'}
       {name: 'javascript', src: 'mode-javascript.js'}
       {name: 'coffeescript', src: 'mode-coffee.js'}
@@ -17,7 +19,6 @@
     ]
 
     collab_docs.get @id, (err, updated_doc) ->
-      console.log src_prefix
       console.log "[TRACE] callback from findOne: #{err} and #{updated_doc}"
       if err?
         doc = err
@@ -26,10 +27,11 @@
       else
         doc = 'start coding here!'
 
-      render 'collab', {modes, src_prefix, doc}
+      render 'collab', {ace_modes, doc}
 
   at collab_updated: ->
     console.log '[TRACE] updating collab'
+
     emit 'collab_updated'
 
   client '/collab.js': ->
@@ -42,10 +44,14 @@
     at collab_updated: ->
       console.log 'received updated doc'
 
-    periodical_update = ->
-      setTimeout ->
-        emit 'collab_updated'
+    periodical_update = (editor) ->
+      setInterval ->
+        console.log 'triggering periodical update'
+        lines = editor.getSession().getDocument().getAllLines()
+        console.log lines
+        emit 'collab_updated', doc: lines
       , 5000
+
 
     $().ready =>
       @editor = ace.edit "editor"
@@ -82,11 +88,12 @@
       $('#text_button').addClass("positive")
 
       @editor.getSession().setMode(new @TextileMode())
+      periodical_update(@editor)
 
   # main page layout
   view collab: ->
     div id: 'mode_panel', class: 'header', ->
-      for current_mode in @modes
+      for current_mode in @ace_modes
         partial 'mode_partial', mode: current_mode
 
     div id: 'editor', class: 'editor', ->
@@ -96,9 +103,9 @@
     script src: '/javascripts/ace/ace.js'
     script src: '/javascripts/ace/theme-twilight.js'
 
-    for mode in @modes
+    for mode in @ace_modes
       if mode.src?
-        script src: @src_prefix + mode.src
+        script src: '/javascripts/ace/' + mode.src
 
     script src: '/collab.js'
 
