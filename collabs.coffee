@@ -44,6 +44,11 @@
     console.log "[TRACE] joining room #{@code}"
     socket.join @code
 
+  at request_lock: ->
+    console.log "[TRACE] user requesting lock for file editing at #{@code}"
+    socket.broadcast.to(@code).emit 'locked'
+    emit 'editing_granted'
+
   at collab_update: ->
     console.log "[TRACE] updating collab with code #{@code} with lines: #{@lines}"
     collab_docs.set @code, @lines, (err, updated_doc) ->
@@ -66,6 +71,26 @@
           document.removeLines(0, document.getLength())
         document.insertLines(0, lines)
 
+    at locked: ->
+      console.log 'locking editor'
+      editor = $("#editor").data("editor_hook")
+      stopfunc = $("#editor").data("stop_editing_hook")
+      stopfunc editor
+
+    at editing_granted: ->
+      console.log 'enabling editor'
+      editor = $("#editor").data("editor_hook")
+      startfunc = $("#editor").data("start_editing_hook")
+      startfunc editor
+
+    stop_editing = (editor) =>
+      $("#editor").attr("disabled", "disabled")
+      $("lock").attr("src", "/images/closed_lock.png")
+      
+    start_editing = (editor) =>
+      $("#editor").removeAttr("disabled")
+      $("lock").attr("src", "/images/open_lock.jpg")
+
     at collab_updated: ->
       console.log 'received updated doc for code ' + @code
       mycode = $('#collab_code').text()
@@ -82,6 +107,8 @@
         console.log lines
         emit 'collab_update', code: code, lines: lines
       , 5000
+
+    @isLocked = true
 
     $().ready =>
       @editor = ace.edit "editor"
@@ -108,6 +135,7 @@
         ruby: @RubyMode
       }
 
+      code = $('#collab_code').text()
       $('#mode_panel .button').click ->
         mode_name = $(this).text()
         $('.button').removeClass("positive")
@@ -120,20 +148,36 @@
       @editor.getSession().setMode(new @TextileMode())
       # bug in ace prevents this from working well.
       # @editor.getSession().setUseWrapMode(true)
+      #
+      $("#lock").click(->
+        console.log 'toggled lock'
+        if @isLocked
+          emit 'request_lock', code: code
+      )
 
       $("#editor").data("editor_hook", @editor)
       $("#editor").data("update_hook", update_ace_document)
+      $("#editor").data("stop_editing_hook", stop_editing)
+      $("#editor").data("start_editing_hook", start_editing)
 
-      code = $('#collab_code').text()
+      $("#editor").attr("disabled", "disabled")
+
       console.log "[ZAPPATEST] code: #{code}"
       emit 'join_room', code: code
       periodical_update @editor, code
 
   # main page layout
   view collab: ->
-    div id: 'collab_info', ->
-      span id: 'collab_code', ->
-        text @code
+
+    div id: 'collab_code', ->
+      text @code
+
+    img id: 'lock', src: "/images/closed_lock.png", width: "10%"
+
+    div id: 'lock_description', ->
+      text 'Click to toggle the lock'
+      br()
+      text 'an open lock for you is locked to everyone else'
 
     div id: 'mode_panel', class: 'header', ->
       for current_mode in @ace_modes
@@ -144,6 +188,7 @@
         if line?
           text line + '''\r\n'''
       text @lines[@lines.length-1]
+
 
     # include page specific javascript, including the ace js files.
     script src: '/javascripts/ace/ace-uncompressed.js'
