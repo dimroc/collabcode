@@ -1,5 +1,5 @@
 @include = ->
-  requiring 'emailjs', 'os', 'net'
+  requiring 'emailjs', 'os', 'net', 'url'
 
   # I'm not happy with this, but node searches for modules relative
   # to where zappa launches which is deep in the node_modules dir.
@@ -34,6 +34,7 @@
     }, (err, message) -> console.log(err || message))
 
   get '/': ->
+    console.log '[TRACE] request URL ' + request.url
     render 'index'
 
   at collab_requested: ->
@@ -46,7 +47,9 @@
     collab_code = collab_code.toString 16
 
     console.log '[TRACE] got code ' + collab_code
-    collab_site = 'http://' + app.address().address + ':' + app.address().port + "/collabs/#{collab_code}"
+    base_address = process.env.DOMAIN || app.address().address + ':' + app.address().port
+
+    collab_site = 'http://' + base_address + "/collabs/#{collab_code}"
     console.log '[TRACE] got site ' + collab_site
     collab = { site: collab_site, code: collab_code }
 
