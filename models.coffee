@@ -19,12 +19,12 @@
   @collab_docs.get = (code, callback) =>
     @collab_docs.findOne({ code: code }, callback)
 
-  @collab_docs.set = (code, doc, callback) =>
+  @collab_docs.set = (code, lines, callback) =>
     @collab_docs.findAndModify({
       new: true,
       upsert: true,
       query: { code: code },
-      update: { doc: doc }
+      update: { code: code, lines: lines }
     }, callback)
 
   def mongodb: @db
