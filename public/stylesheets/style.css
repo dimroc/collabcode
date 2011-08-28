@@ -1,0 +1,18 @@
+/* line 1, style.sass */
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: white;
+}
+
+/* line 5, style.sass */
+a {
+  color: #00b7ff;
+}
+
+/* line 8, style.sass */
+#editor {
+  position: relative;
+  width: 600px;
+  height: 600px;
+}
