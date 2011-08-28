@@ -5,13 +5,13 @@
     @src_prefix = '/javascripts/ace/'
     @modes = [
       {name: 'text'}
-      {name: 'javascript', src: 'mode-javascript.js'} 
-      {name: 'coffeescript', src: 'mode-coffee.js'} 
-      {name: 'csharp', src: 'mode-csharp.js'} 
-      {name: 'c', src: 'mode-c_cpp.js'} 
-      {name: 'html', src: 'mode-html.js'} 
-      {name: 'python', src: 'mode-python.js'} 
-      {name: 'ruby', src: 'mode-ruby.js'} 
+      {name: 'javascript', src: 'mode-javascript.js'}
+      {name: 'coffeescript', src: 'mode-coffee.js'}
+      {name: 'csharp', src: 'mode-csharp.js'}
+      {name: 'c', src: 'mode-c_cpp.js'}
+      {name: 'html', src: 'mode-html.js'}
+      {name: 'python', src: 'mode-python.js'}
+      {name: 'ruby', src: 'mode-ruby.js'}
     ]
 
     render 'collab', {@modes, @src_prefix}

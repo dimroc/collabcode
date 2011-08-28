@@ -7,6 +7,29 @@
     console.log '[TRACE] received collab request with email ' + @email
     io.sockets.emit 'collab_created', collab_code: 'gibberish'
 
+    if @email?
+      # send email
+      emailjs = require "emailjs"
+
+      username = process.env.SENDGRID_USERNAME || 'app820434@heroku.com'
+      password = process.env.SENDGRID_PASSWORD || '69720811bbfb6510c7'
+
+      console.log "[TRACE] mailer constructed. attempting to send to #{@email} from #{username}"
+
+      server = emailjs.server.connect({
+        user: username,
+        password: password,
+        host: "smtp.sendgrid.net",
+        ssl: true
+      })
+
+      server.send({
+        from: "#{username}",
+        to: "#{@email}",
+        subject: "[Collab][Code] Collab Site Created"
+        text: "i hope this works",
+      }, (err, message) -> console.log(err || message))
+
   client '/root.js': ->
     connect()
 
