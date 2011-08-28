@@ -9,7 +9,7 @@
     , "sass": "0.5.x"
     , "socket.io": "0.7.x"
     , "zappa": "0.2.x"
-    , "mongoose": "2.0.x"
+    , "mongolian": "0.1.x"
     , "emailjs": "0.1.x"
   }
   , "engine": "node 0.4.x"

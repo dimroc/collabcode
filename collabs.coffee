@@ -1,11 +1,11 @@
 @include = ->
   get '/collabs': ->
     redirect '/'
+
   get '/collabs/:id': ->
     console.log "[TRACE] retrieve id #{@id}"
-
-    @src_prefix = '/javascripts/ace/'
-    @modes = [
+    src_prefix = '/javascripts/ace/'
+    modes = [
       {name: 'text'}
       {name: 'javascript', src: 'mode-javascript.js'}
       {name: 'coffeescript', src: 'mode-coffee.js'}
@@ -16,12 +16,36 @@
       {name: 'ruby', src: 'mode-ruby.js'}
     ]
 
-    render 'collab', {@modes, @src_prefix}
+    collab_docs.get @id, (err, updated_doc) ->
+      console.log src_prefix
+      console.log "[TRACE] callback from findOne: #{err} and #{updated_doc}"
+      if err?
+        doc = err
+      else if updated_doc?
+        doc = updated_doc
+      else
+        doc = 'start coding here!'
+
+      render 'collab', {modes, src_prefix, doc}
+
+  at collab_updated: ->
+    console.log '[TRACE] updating collab'
+    emit 'collab_updated'
 
   client '/collab.js': ->
+    connect()
+
     set_mode = (mode) =>
       console.log 'setting mode to ' + JSON.stringify(mode)
       @editor.getSession().setMode(new @ModeMap[mode])
+    
+    at collab_updated: ->
+      console.log 'received updated doc'
+
+    periodical_update = ->
+      setTimeout ->
+        emit 'collab_updated'
+      , 5000
 
     $().ready =>
       @editor = ace.edit "editor"
@@ -66,7 +90,7 @@
         partial 'mode_partial', mode: current_mode
 
     div id: 'editor', class: 'editor', ->
-      'cout << "hello world"'
+      @doc
 
     # include page specific javascript, including the ace js files.
     script src: '/javascripts/ace/ace.js'

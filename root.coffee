@@ -56,7 +56,7 @@
     console.log '[TRACE] dispatching collab ' + JSON.stringify collab
     emit 'collab_created', collab: collab
 
-    if @email?
+    if @email? and @email != ""
       send_collab_email_helper @email, collab
       
   client '/root.js': ->
@@ -65,8 +65,8 @@
     at collab_created: ->
       console.log 'client received collab site ' + JSON.stringify @collab
       $('#collab_info').append(
-        "<ul><li><a href='collabs/#{@collab.code}'>" + 
-        document.URL + "collabs/#{@collab.code}" + 
+        "<ul><li><a href='collabs/#{@collab.code}'>" +
+        document.URL + "collabs/#{@collab.code}" +
         '</a></li></ul>')
 
     $().ready ->
