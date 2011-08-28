@@ -26,17 +26,58 @@ div {
 /* line 20, style.sass */
 #editor {
   position: relative;
+  clear: both;
   width: 600px;
   height: 600px;
 }
 
-/* line 25, style.sass */
+/* line 26, style.sass */
 #collab_info {
   position: relative;
   clear: both;
 }
-/* line 28, style.sass */
+/* line 29, style.sass */
 #collab_info li {
   margin-left: 10px;
   color: #444444;
+}
+
+/* line 33, style.sass */
+#collab_code {
+  position: relative;
+  clear: both;
+}
+
+/* line 37, style.sass */
+#lock {
+  position: relative;
+  float: left;
+}
+
+/* line 41, style.sass */
+#mode_panel {
+  position: relative;
+  clear: both;
+}
+
+/* line 45, style.sass */
+#lock_description {
+  position: relative;
+  float: right;
+}
+
+/* line 49, style.sass */
+.opened {
+  float: left;
+  width: 50;
+  height: 50;
+  background-image: url('/images/open_lock.jpg?1314571304');
+}
+
+/* line 56, style.sass */
+.locked {
+  float: left;
+  width: 50;
+  height: 50;
+  background-image: url('/images/closed_lock.png?1314571496');
 }
