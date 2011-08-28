@@ -67,7 +67,11 @@
       $('#collab_info').append(
         "<ul><li><a href='collabs/#{@collab.code}'>" +
         document.URL + "collabs/#{@collab.code}" +
+<<<<<<< HEAD
         '</a></li></ul>')
+=======
+        '</a></li><li>Now have share the url and have multiple watch someone edit!</li></ul>')
+>>>>>>> master
 
     $().ready ->
       $('#collab_button').click ->
