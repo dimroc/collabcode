@@ -1,18 +1,42 @@
-/* line 1, style.sass */
+/* line 4, style.sass */
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background: white;
 }
 
-/* line 5, style.sass */
+/* line 8, style.sass */
 a {
   color: #00b7ff;
+  text-decoration: none;
 }
 
-/* line 8, style.sass */
+/* line 12, style.sass */
+p {
+  padding: 5px;
+  display: block;
+  margin-left: 4px;
+}
+
+/* line 17, style.sass */
+div {
+  position: relative;
+}
+
+/* line 20, style.sass */
 #editor {
   position: relative;
   width: 600px;
   height: 600px;
+}
+
+/* line 25, style.sass */
+#collab_info {
+  position: relative;
+  clear: both;
+}
+/* line 28, style.sass */
+#collab_info li {
+  margin-left: 10px;
+  color: #444444;
 }
