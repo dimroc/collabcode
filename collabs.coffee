@@ -177,7 +177,7 @@
     div id: 'lock_description', ->
       text 'Click to toggle the lock'
       br()
-      text 'an open lock for you is locked to everyone else'
+      text 'an open lock for you is closed lock for everyone else'
 
     div id: 'mode_panel', class: 'header', ->
       for current_mode in @ace_modes
