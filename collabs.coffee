@@ -1,5 +1,7 @@
 @include = ->
-  get '/collab/:id': ->
+  get '/collabs': ->
+    redirect '/'
+  get '/collabs/:id': ->
     console.log "[TRACE] retrieve id #{@id}"
 
     @src_prefix = '/javascripts/ace/'
