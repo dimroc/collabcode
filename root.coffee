@@ -8,30 +8,31 @@
 
   helper send_collab_email_helper: (email_address, collab) ->
     # send email
-    username = process.env.SENDGRID_USERNAME || 'app820434@heroku.com'
-    password = process.env.SENDGRID_PASSWORD || '69720811bbfb6510c7'
+    username = process.env.SENDGRID_USERNAME
+    password = process.env.SENDGRID_PASSWORD
 
-    console.log "[TRACE] mailer constructed. attempting to send to #{email_address} from #{username}"
+    if username?
+      console.log "[TRACE] mailer constructed. attempting to send to #{email_address} from #{username}"
 
-    server = emailjs.server.connect({
-      user: username,
-      password: password,
-      host: "smtp.sendgrid.net",
-      ssl: true
-    })
+      server = emailjs.server.connect({
+        user: username,
+        password: password,
+        host: "smtp.sendgrid.net",
+        ssl: true
+      })
 
-    text_to_send =
-      '''Code collaborators, interviewers, job candidates, and whoever, share code here:
+      text_to_send =
+        '''Code collaborators, interviewers, job candidates, and whoever, share code here:
 
-        '''
-    text_to_send += "#{collab.site}"
-      
-    server.send({
-      from: "#{username}",
-      to: "#{email_address}",
-      subject: "[Collab][Code] Collab Site Created",
-      text: text_to_send
-    }, (err, message) -> console.log(err || message))
+          '''
+      text_to_send += "#{collab.site}"
+        
+      server.send({
+        from: "#{username}",
+        to: "#{email_address}",
+        subject: "[Collab][Code] Collab Site Created",
+        text: text_to_send
+      }, (err, message) -> console.log(err || message))
 
   get '/': ->
     console.log '[TRACE] request URL ' + request.url

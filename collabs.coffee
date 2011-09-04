@@ -1,6 +1,15 @@
+# TODO:
+# 1) Figure out a way to disable the ACE editor.
+# 2) Discover a mechanism for real-time communication b/w server and client
+# -  - It seems zappa has some bugs with the socket.io implementation.
+# -  - Use NowJS?
+# 3) List users in the current channel.
+# 4) Implement locking mechanism for users
+
+
 @include = ->
-  requiring 'timer'
-  enable 'serve jquery'
+  enable 'serve now'
+  enable 'serve socket.io'
   get '/collabs': ->
     redirect '/'
 
@@ -37,31 +46,64 @@
 
       render 'collab', {code, ace_modes, lines}
 
+# NOTICE: The wrong event handler gets invoked when running this code!
   at connection: ->
-    console.log 'CONNECTED!!'
-
-  at join_room: ->
-    console.log "[TRACE] joining room #{@code}"
-    socket.join @code
-
-  at request_lock: ->
-    console.log "[TRACE] user requesting lock for file editing at #{@code}"
-    socket.broadcast.to(@code).emit 'locked'
-    emit 'editing_granted'
-
-  at collab_update: ->
-    console.log "[TRACE] updating collab with code #{@code} with lines: #{@lines}"
-    collab_docs.set @code, @lines, (err, updated_doc) ->
-      console.log "[TRACE] updated #{updated_doc.code} to #{updated_doc.lines}"
-      socket.broadcast.to(updated_doc.code).emit 'collab_updated', code: updated_doc.code, lines: updated_doc.lines
+    console.log "CONNECTION"
+    emit 'test_hook'
 
   client '/collab.js': ->
     connect()
 
+    at 'test_hook': ->
+      console.log "HOOK"
+
+    at 'bullshit': ->
+      console.log "bullshit"
+
+#    at 'lock_editor': ->
+#      console.log 'locking editor'
+#      editor = $("#editor").data("editor_hook")
+#      stopfunc = $("#editor").data("stop_editing_hook")
+#      stopfunc editor
+#
+#    at 'editing_granted': ->
+#      console.log 'received socket.io request to enable editor'
+#      editor = $("#editor").data("editor_hook")
+#      startfunc = $("#editor").data("start_editing_hook")
+#      startfunc editor
+#
+#    at collab_updated: ->
+#     console.log 'received updated doc for code ' + @code
+#      mycode = $('#collab_code').text()
+#      if mycode == @code
+#        updatefunc = $("#editor").data("update_hook")
+#        updatefunc @lines
+#      else
+#        console.log '[ERROR] received information about the wrong code!'
+
+    _GLOBAL = {
+      isLocked: false
+    }
+
+    # Attach main properties to _GLOBAL
+    if window?
+      window._GLOBAL = _GLOBAL
+    else
+      console.log "[ERROR] Couldn't attach _GLOBAL to window."
+
+    stop_editing = (editor) =>
+      $("#editor").attr("disabled", "disabled")
+      $("#editor").removeAttr("disabled")
+      $("lock").attr("src", "/images/closed_lock.png")
+
+    start_editing = (editor) =>
+      console.log 'enabling editor'
+      $("lock").attr("src", "/images/open_lock.jpg")
+
     set_mode = (mode) =>
       console.log 'setting mode to ' + JSON.stringify(mode)
       @editor.getSession().setMode(new @ModeMap[mode])
-    
+
     update_ace_document = (lines) =>
       editor = $("#editor").data("editor_hook")
       document = editor.getSession().getDocument()
@@ -71,46 +113,17 @@
           document.removeLines(0, document.getLength())
         document.insertLines(0, lines)
 
-    at locked: ->
-      console.log 'locking editor'
-      editor = $("#editor").data("editor_hook")
-      stopfunc = $("#editor").data("stop_editing_hook")
-      stopfunc editor
-
-    at editing_granted: ->
-      console.log 'enabling editor'
-      editor = $("#editor").data("editor_hook")
-      startfunc = $("#editor").data("start_editing_hook")
-      startfunc editor
-
-    stop_editing = (editor) =>
-      $("#editor").attr("disabled", "disabled")
-      $("lock").attr("src", "/images/closed_lock.png")
-      
-    start_editing = (editor) =>
-      $("#editor").removeAttr("disabled")
-      $("lock").attr("src", "/images/open_lock.jpg")
-
-    at collab_updated: ->
-      console.log 'received updated doc for code ' + @code
-      mycode = $('#collab_code').text()
-      if mycode == @code
-        updatefunc = $("#editor").data("update_hook")
-        updatefunc @lines
-      else
-        console.log '[ERROR] received information about the wrong code!'
-
-    periodical_update = (editor, code) ->
+    periodical_update = (editor, code) =>
       setInterval ->
-        console.log 'triggering periodical update'
-        lines = editor.getSession().getDocument().getAllLines()
-        console.log lines
-        emit 'collab_update', code: code, lines: lines
+        if window._GLOBAL.isLocked
+          console.log 'triggering periodical update'
+          lines = editor.getSession().getDocument().getAllLines()
+          emit 'collab_update', code: code, lines: lines
       , 5000
 
-    @isLocked = true
-
     $().ready =>
+      code = $('#collab_code').text()
+
       @editor = ace.edit "editor"
       @editor.setTheme "ace/theme/twilight"
 
@@ -135,7 +148,6 @@
         ruby: @RubyMode
       }
 
-      code = $('#collab_code').text()
       $('#mode_panel .button').click ->
         mode_name = $(this).text()
         $('.button').removeClass("positive")
@@ -150,44 +162,66 @@
       # @editor.getSession().setUseWrapMode(true)
       #
       $("#lock").click(->
-        console.log 'toggled lock'
-        if @isLocked
-          emit 'request_lock', code: code
+        if !@isLocked
+          console.log 'requesting lock'
+        else
+          console.log 'release lock'
       )
 
       $("#editor").data("editor_hook", @editor)
       $("#editor").data("update_hook", update_ace_document)
       $("#editor").data("stop_editing_hook", stop_editing)
       $("#editor").data("start_editing_hook", start_editing)
-
       $("#editor").attr("disabled", "disabled")
 
-      console.log "[ZAPPATEST] code: #{code}"
-      emit 'join_room', code: code
+      window._GLOBAL.code = code
+      window._GLOBAL.editor = @editor
+      window._GLOBAL.nickname = prompt "Please enter a nickname."
+
       periodical_update @editor, code
 
   # main page layout
   view collab: ->
 
-    div id: 'collab_code', ->
-      text @code
+    div id: 'info_panel_headers', ->
 
-    img id: 'lock', src: "/images/closed_lock.png", width: "10%"
+    div id: 'info_panel', ->
+      div id: 'lock_info', ->
+        h4 'Current Editor:'
+        div ->
+          span id: 'collab_code', ->
+            text "#{@code}"
+          br()
+          span id: 'current_editor', ->
+            text "bogus user"
+        img id: 'lock', src: "/images/closed_lock.png", width: "50px"
 
-    div id: 'lock_description', ->
-      text 'Click to toggle the lock'
-      br()
-      text 'an open lock for you is closed lock for everyone else'
+      div style: '''float: left''', ->
+        h4 'Description:'
+        div id: 'lock_description', class: 'alt', ->
+          text 'Click to toggle the lock'
+          br()
+          text 'an open lock for you is a closed lock for everyone else'
 
-    div id: 'mode_panel', class: 'header', ->
-      for current_mode in @ace_modes
-        partial 'mode_partial', mode: current_mode
+      div id: 'user_panel', ->
+        h4 'Viewers:'
+        ol ->
+          li 'some user1'
+          li 'some user1'
+          li 'some user1'
+          li 'some user1'
 
-    div id: 'editor', class: 'editor', ->
-      for line in @lines[0...@lines.length-1]
-        if line?
-          text line + '''\r\n'''
-      text @lines[@lines.length-1]
+    div id: 'content', ->
+      div id: 'mode_panel', class: 'header', ->
+        for current_mode in @ace_modes
+          partial 'mode_partial', mode: current_mode
+
+      div id: 'editor', class: 'editor', ->
+        for line in @lines[0...@lines.length-1]
+          if line?
+            text line + '''\r\n'''
+        text @lines[@lines.length-1]
+
 
 
     # include page specific javascript, including the ace js files.

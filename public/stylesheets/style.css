@@ -1,83 +1,122 @@
-/* line 4, style.sass */
+/* line 7, style.sass */
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background: white;
 }
 
-/* line 8, style.sass */
+/* line 11, style.sass */
 a {
   color: #00b7ff;
   text-decoration: none;
 }
 
-/* line 12, style.sass */
+/* line 15, style.sass */
 p {
   padding: 5px;
   display: block;
   margin-left: 4px;
 }
 
-/* line 17, style.sass */
+/* line 20, style.sass */
+h4 {
+  margin: 0px;
+  padding: 0px;
+}
+
+/* line 24, style.sass */
 div {
   position: relative;
 }
 
-/* line 20, style.sass */
+/* line 27, style.sass */
+#content {
+  width: 950px;
+  margin: 0 auto;
+  overflow: hidden;
+  *zoom: 1;
+  position: relative;
+  width: 650px;
+}
+
+/* line 32, style.sass */
 #editor {
   position: relative;
-  clear: both;
-  width: 600px;
+  clear: left;
   height: 600px;
 }
 
-/* line 26, style.sass */
+/* line 37, style.sass */
 #collab_info {
   position: relative;
-  clear: both;
 }
-/* line 29, style.sass */
+/* line 39, style.sass */
 #collab_info li {
   margin-left: 10px;
   color: #444444;
 }
 
-/* line 33, style.sass */
+/* line 43, style.sass */
 #collab_code {
   position: relative;
-  clear: both;
+  visibility: hidden;
 }
 
-/* line 37, style.sass */
+/* line 47, style.sass */
 #lock {
   position: relative;
-  float: left;
+  cursor: pointer;
+  clear: both;
+  padding: 10px;
 }
 
-/* line 41, style.sass */
+/* line 53, style.sass */
+#lock_info {
+  float: left;
+  width: 150px;
+}
+
+/* line 59, style.sass */
 #mode_panel {
   position: relative;
-  clear: both;
 }
 
-/* line 45, style.sass */
+/* line 62, style.sass */
+#user_panel {
+  maxheight: 100px;
+  width: 150px;
+  overflow: auto;
+  float: left;
+  vertical-align: top;
+}
+
+/* line 70, style.sass */
+#info_panel {
+  width: 950px;
+  margin: 0 auto;
+  overflow: hidden;
+  *zoom: 1;
+  width: 650px;
+}
+
+/* line 74, style.sass */
 #lock_description {
   position: relative;
-  float: right;
+  float: left;
+  width: 300px;
+  margin: 25px;
 }
 
-/* line 49, style.sass */
+/* line 81, style.sass */
 .opened {
-  float: left;
   width: 50;
   height: 50;
-  background-image: url('/images/open_lock.jpg?1314571304');
+  background-image: url('/images/open_lock.jpg?1314575227');
 }
 
-/* line 56, style.sass */
+/* line 87, style.sass */
 .locked {
-  float: left;
   width: 50;
   height: 50;
-  background-image: url('/images/closed_lock.png?1314571496');
+  background-image: url('/images/closed_lock.png?1314575227');
 }

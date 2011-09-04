@@ -1,5 +1,8 @@
 @import "blueprint/fancy-type"
 @import blueprint/buttons
+@import blueprint
+
+$content_width: 650px
 
 body
   :padding 50px
@@ -14,47 +17,74 @@ p
   :display block
   :margin-left 4px
 
+h4
+  :margin 0px
+  :padding 0px
+
 div
   :position relative
 
+#content
+  @include container
+  :position relative
+  :width $content_width
+
 #editor
   :position relative
-  :clear both
-  :width 600px
+  :clear left
   :height 600px
 
 #collab_info
   :position relative
-  :clear both
   li
     :margin-left 10px
     :color #444444
 
 #collab_code
   :position relative
-  :clear both
+  :visibility hidden
 
 #lock
   :position relative
+  :cursor pointer
+  :clear both
+  :padding 10px
+
+#lock_info
   :float left
+  :width 150px
+
+#current_editor
 
 #mode_panel
   :position relative
-  :clear both
+
+#user_panel
+  //:display inline
+  :maxheight 100px
+  :width 150px
+  :overflow auto
+  :float left
+  :vertical-align top
+
+#info_panel
+  @include container
+  :width $content_width
 
 #lock_description
   :position relative
-  :float right
+  :float left
+  :width 300px
+  //:margin 0px 35px 0px 20px
+  :margin 25px
 
 .opened
-  :float left
   :width 50
   :height 50
   :background
     :image image_url("/images/open_lock.jpg")
 
 .locked
-  :float left
   :width 50
   :height 50
   :background
