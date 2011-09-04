@@ -1,11 +1,12 @@
 @import "blueprint/fancy-type"
 @import blueprint/buttons
+@import blueprint/grid
+@import blueprint/scaffolding
 @import blueprint
 
 $content_width: 650px
 
 body
-  :padding 50px
   :font 14px "Lucida Grande", Helvetica, Arial, sans-serif
   :background white
 a
@@ -23,6 +24,9 @@ h4
 
 div
   :position relative
+
+.header
+  :background white
 
 #content
   @include container

@@ -1,35 +1,39 @@
-/* line 7, style.sass */
+/* line 9, style.sass */
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background: white;
 }
 
-/* line 11, style.sass */
+/* line 12, style.sass */
 a {
   color: #00b7ff;
   text-decoration: none;
 }
 
-/* line 15, style.sass */
+/* line 16, style.sass */
 p {
   padding: 5px;
   display: block;
   margin-left: 4px;
 }
 
-/* line 20, style.sass */
+/* line 21, style.sass */
 h4 {
   margin: 0px;
   padding: 0px;
 }
 
-/* line 24, style.sass */
+/* line 25, style.sass */
 div {
   position: relative;
 }
 
-/* line 27, style.sass */
+/* line 28, style.sass */
+.header {
+  background: white;
+}
+
+/* line 31, style.sass */
 #content {
   width: 950px;
   margin: 0 auto;
@@ -39,30 +43,30 @@ div {
   width: 650px;
 }
 
-/* line 32, style.sass */
+/* line 36, style.sass */
 #editor {
   position: relative;
   clear: left;
   height: 600px;
 }
 
-/* line 37, style.sass */
+/* line 41, style.sass */
 #collab_info {
   position: relative;
 }
-/* line 39, style.sass */
+/* line 43, style.sass */
 #collab_info li {
   margin-left: 10px;
   color: #444444;
 }
 
-/* line 43, style.sass */
+/* line 47, style.sass */
 #collab_code {
   position: relative;
   visibility: hidden;
 }
 
-/* line 47, style.sass */
+/* line 51, style.sass */
 #lock {
   position: relative;
   cursor: pointer;
@@ -70,18 +74,18 @@ div {
   padding: 10px;
 }
 
-/* line 53, style.sass */
+/* line 57, style.sass */
 #lock_info {
   float: left;
   width: 150px;
 }
 
-/* line 59, style.sass */
+/* line 63, style.sass */
 #mode_panel {
   position: relative;
 }
 
-/* line 62, style.sass */
+/* line 66, style.sass */
 #user_panel {
   maxheight: 100px;
   width: 150px;
@@ -90,7 +94,7 @@ div {
   vertical-align: top;
 }
 
-/* line 70, style.sass */
+/* line 74, style.sass */
 #info_panel {
   width: 950px;
   margin: 0 auto;
@@ -99,7 +103,7 @@ div {
   width: 650px;
 }
 
-/* line 74, style.sass */
+/* line 78, style.sass */
 #lock_description {
   position: relative;
   float: left;
@@ -107,14 +111,14 @@ div {
   margin: 25px;
 }
 
-/* line 81, style.sass */
+/* line 85, style.sass */
 .opened {
   width: 50;
   height: 50;
   background-image: url('/images/open_lock.jpg?1314575227');
 }
 
-/* line 87, style.sass */
+/* line 91, style.sass */
 .locked {
   width: 50;
   height: 50;
