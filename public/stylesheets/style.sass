@@ -2,23 +2,31 @@
 @import blueprint/buttons
 @import blueprint/grid
 @import blueprint/scaffolding
+@import blueprint/typography
 @import blueprint
+
+@include blueprint-typography-defaults
 
 $content_width: 650px
 
 body
+  @include blueprint-typography
   :font 14px "Lucida Grande", Helvetica, Arial, sans-serif
   :background white
+  @include normal-text
+
 a
   :color #00B7FF
   :text-decoration none
 
 p
+  @include normal-text
   :padding 5px
   :display block
   :margin-left 4px
 
 h4
+  @include quiet
   :margin 0px
   :padding 0px
 
@@ -39,6 +47,7 @@ div
   :height 600px
 
 #collab_info
+  @include quiet
   :position relative
   li
     :margin-left 10px
@@ -46,24 +55,27 @@ div
 
 #collab_code
   :position relative
-  :visibility hidden
+  :visibility collapse
 
 #lock
   :position relative
   :cursor pointer
-  :clear both
+  //:clear both
+  :float left
   :padding 10px
 
 #lock_info
   :float left
-  :width 150px
+  :width 450px
 
 #current_editor
+  @include quiet
 
 #mode_panel
   :position relative
 
 #user_panel
+  @include quiet
   //:display inline
   :maxheight 100px
   :width 150px
@@ -76,11 +88,14 @@ div
   :width $content_width
 
 #lock_description
+  @include quiet
   :position relative
   :float left
-  :width 300px
-  //:margin 0px 35px 0px 20px
-  :margin 25px
+  :margin-top 25px
+  :margin-left 10px
+
+.lock_icon:hover
+  :background gray
 
 .opened
   :width 50

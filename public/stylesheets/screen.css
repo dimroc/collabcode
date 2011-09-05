@@ -134,35 +134,35 @@ body a[href^="http:"], body a[href^="mailto:"], body a[href^="http:"]:visited, b
 }
 /* line 28, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_link-icons.scss */
 body a[href^="http:"] {
-  background-image: url('/images/link_icons/external.png');
+  background-image: url('/images/link_icons/external.png?1315246408');
 }
 /* line 29, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_link-icons.scss */
 body a[href^="mailto:"] {
-  background-image: url('/images/link_icons/email.png');
+  background-image: url('/images/link_icons/email.png?1315246408');
 }
 /* line 30, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_link-icons.scss */
 body a[href^="http:"]:visited {
-  background-image: url('/images/link_icons/visited.png');
+  background-image: url('/images/link_icons/visited.png?1315246408');
 }
 /* line 31, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_link-icons.scss */
 body a[href$=".pdf"] {
-  background-image: url('/images/link_icons/pdf.png');
+  background-image: url('/images/link_icons/pdf.png?1315246408');
 }
 /* line 32, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_link-icons.scss */
 body a[href$=".doc"] {
-  background-image: url('/images/link_icons/doc.png');
+  background-image: url('/images/link_icons/doc.png?1315246408');
 }
 /* line 33, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_link-icons.scss */
 body a[href$=".xls"] {
-  background-image: url('/images/link_icons/xls.png');
+  background-image: url('/images/link_icons/xls.png?1315246408');
 }
 /* line 35, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_link-icons.scss */
 body a[href$=".rss"], body a[href$=".rdf"] {
-  background-image: url('/images/link_icons/feed.png');
+  background-image: url('/images/link_icons/feed.png?1315246408');
 }
 /* line 36, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_link-icons.scss */
 body a[href^="aim:"] {
-  background-image: url('/images/link_icons/im.png');
+  background-image: url('/images/link_icons/im.png?1315246408');
 }
 /* line 8, /Users/dimroc/Repos/git/nko2/public/stylesheets/link_icons.sass */
 body a.noicon {
@@ -176,7 +176,7 @@ body a#this-is-a-pdf-link {
   margin: -2px 0;
   background-repeat: no-repeat;
   background-position: right center;
-  background-image: url('/images/link_icons/pdf.png');
+  background-image: url('/images/link_icons/pdf.png?1315246408');
 }
 
 /* line 27, screen.sass */
@@ -499,6 +499,56 @@ body.bp .removed {
   background: #990000;
   color: white;
 }
+/* line 39, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_scaffolding.scss */
+body.bp .box {
+  padding: 1.5em;
+  margin-bottom: 1.5em;
+  background: #e5ecf9;
+}
+/* line 42, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_scaffolding.scss */
+body.bp .border {
+  border-right: 1px solid #eeeeee;
+}
+/* line 45, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_scaffolding.scss */
+body.bp .colborder {
+  padding-right: 2.084%;
+  margin-right: 2.084%;
+  border-right: 1px solid #eeeeee;
+}
+/* line 47, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_scaffolding.scss */
+body.bp hr {
+  background: #dddddd;
+  color: #dddddd;
+  clear: both;
+  width: 100%;
+  height: 0.083em;
+  margin: 0;
+  margin-left: 2.084%;
+  margin-right: 2.084%;
+  border: none;
+}
+/* line 49, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_scaffolding.scss */
+body.bp hr.space {
+  background: #dddddd;
+  color: #dddddd;
+  clear: both;
+  width: 100%;
+  height: 0.083em;
+  margin: 0;
+  margin-left: 2.084%;
+  margin-right: 2.084%;
+  border: none;
+  background: white;
+  color: white;
+}
+/* line 51, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_scaffolding.scss */
+body.bp form.inline {
+  line-height: 3;
+}
+/* line 6, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_form.scss */
+body.bp form.inline p {
+  margin-bottom: 0;
+}
 
 /* line 18, /Users/dimroc/.rvm/gems/ruby-1.9.2-p180/gems/compass-0.11.5/frameworks/blueprint/stylesheets/blueprint/_form.scss */
 form.bp label {
@@ -614,7 +664,7 @@ form.bp form.inline p {
   margin-bottom: 0;
 }
 
-/* line 41, screen.sass */
+/* line 42, screen.sass */
 body.two-col #container {
   min-width: 950px;
   width: 80%;
@@ -622,7 +672,7 @@ body.two-col #container {
   overflow: hidden;
   *zoom: 1;
 }
-/* line 43, screen.sass */
+/* line 44, screen.sass */
 body.two-col #header, body.two-col #footer {
   display: inline;
   float: left;
@@ -630,7 +680,7 @@ body.two-col #header, body.two-col #footer {
   width: 99.974%;
   margin-right: 1.042%;
 }
-/* line 45, screen.sass */
+/* line 46, screen.sass */
 body.two-col #sidebar {
   display: inline;
   float: left;
@@ -638,7 +688,7 @@ body.two-col #sidebar {
   width: 32.63%;
   margin-right: 1.042%;
 }
-/* line 49, screen.sass */
+/* line 50, screen.sass */
 body.two-col #content {
   display: inline;
   float: left;

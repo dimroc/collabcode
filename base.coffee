@@ -12,6 +12,7 @@
           link rel: 'stylesheet', href: '/stylesheets/ie.css'
 
         link rel: 'stylesheet', href: '/stylesheets/style.css'
+        link rel: 'stylesheet', href: '/stylesheets/link_icons.css'
 
         script src: '/socket.io/socket.io.js'
         script src: '/zappa/jquery.js'

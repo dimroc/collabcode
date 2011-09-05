@@ -52,4 +52,9 @@
     console.log "CONNECTION"
     emit 'test_hook'
 
+  at join_room: ->
+    console.log "user <#{@username}> joining room #{@code}."
+    socket.set 'username', @username
+    socket.set 'code', @code
+    socket.join @code
 

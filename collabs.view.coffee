@@ -5,24 +5,20 @@
     div class: 'container', ->
       div id: 'info_panel', class: 'span-24 header', ->
         div id: 'lock_info', ->
-          h3 'Current Editor:'
+          h4 'Current Editor:'
           div ->
-            span id: 'collab_code', ->
-              text "#{@code}"
-            br()
             span id: 'current_editor', ->
               text "bogus user"
-          img id: 'lock', src: "/images/closed_lock.png", width: "50px"
-
-        div style: '''float: left''', ->
-          #h4 'Description:'
-          div id: 'lock_description', class: 'alt', ->
-            text 'Click to toggle the lock'
+            span id: 'collab_code', ->
+              text "#{@code}"
+          img id: 'lock', class: 'lock_icon', src: "/images/closed_lock.png", width: "50px"
+          div id: 'lock_description', ->
+            text 'Click the lock to request editing.'
             br()
-            text 'an open lock for you is a closed lock for everyone else'
+            text 'An open lock for you is a closed lock for everyone else.'
 
         div id: 'user_panel', ->
-          h3 'Viewers:'
+          h4 'Viewers:'
           ol ->
             li 'some user1'
             li 'some user1'

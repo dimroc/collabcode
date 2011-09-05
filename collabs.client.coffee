@@ -124,7 +124,10 @@
 
       window._GLOBAL.code = code
       window._GLOBAL.editor = @editor
-      window._GLOBAL.nickname = prompt "Please enter a nickname."
+      window._GLOBAL.username = prompt "Please enter a username."
+      window._GLOBAL.users = [window._GLOBAL.username,]
+
+      emit 'join_room', username: window._GLOBAL.username, code: code
 
       periodical_update @editor, code
 
