@@ -46,6 +46,7 @@
 
     start_editing = (editor) =>
       console.log 'enabling editor'
+      $("#lock_description").addClass("notice")
       $("#lock").attr("src", "/images/open_lock.jpg")
 
     set_mode = (mode) =>
@@ -127,7 +128,7 @@
       window._GLOBAL.username = prompt "Please enter a username."
       window._GLOBAL.users = [window._GLOBAL.username,]
 
-      emit 'join_room', username: window._GLOBAL.username, code: code
+      emit 'join_room_handler', username: window._GLOBAL.username, code: code
 
       periodical_update @editor, code
 

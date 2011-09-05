@@ -7,7 +7,7 @@
 
 @include blueprint-typography-defaults
 
-$content_width: 650px
+$content_width: 750px
 
 body
   @include blueprint-typography
@@ -46,6 +46,10 @@ div
   :clear left
   :height 600px
 
+#editing_notice
+  @include loud
+  :color red
+
 #collab_info
   @include quiet
   :position relative
@@ -66,13 +70,14 @@ div
 
 #lock_info
   :float left
-  :width 450px
+  :width 550px
 
 #current_editor
   @include quiet
 
 #mode_panel
   :position relative
+  :clear both
 
 #user_panel
   @include quiet
@@ -88,14 +93,12 @@ div
   :width $content_width
 
 #lock_description
-  @include quiet
   :position relative
   :float left
-  :margin-top 25px
-  :margin-left 10px
+  //:margin-top 25px
 
 .lock_icon:hover
-  :background gray
+  //:background gray
 
 .opened
   :width 50

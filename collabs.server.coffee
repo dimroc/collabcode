@@ -2,7 +2,6 @@
 # 1) Figure out a way to disable the ACE editor.
 # 2) Discover a mechanism for real-time communication b/w server and client
 # -  - It seems zappa has some bugs with the socket.io implementation.
-# -  - Use NowJS?
 # 3) List users in the current channel.
 # 4) Implement locking mechanism for users
 
@@ -47,14 +46,44 @@
 
       render 'collab', {code, ace_modes, lines}
 
-# NOTICE: The wrong event handler gets invoked when running this code!
+  release_lock = ->
+    console.log '[TRACE] releasing the edit lock enabling anyone to edit file.'
+    # TODO: update db with info on the user lock mapping.
+    emit 'lock_released'
+  
   at connection: ->
     console.log "CONNECTION"
     emit 'test_hook'
 
-  at join_room: ->
+  at disconnect: ->
+    socket.get 'username', (err, name) ->
+      console.log "#{name} disconnected."
+      #TODO: Remove lock if it exists for that user.
+
+  at join_room_handler: ->
     console.log "user <#{@username}> joining room #{@code}."
     socket.set 'username', @username
     socket.set 'code', @code
     socket.join @code
+
+  at get_users_handler: ->
+    console.log "retrieving the current users in the room."
+    #TODO: return the users for the room @code.
+
+  at collab_updated_handler: ->
+    console.log "[TRACE] updating collab with code #{@code} with lines: #{@lines}"
+    collab_docs.set @code, @lines, (err, updated_doc) ->
+      socket.broadcast.to(updated_doc.code).emit 'collab_updated', code: updated_doc.code, lines: updated_doc.lines
+
+  at request_lock_handler: ->
+    socket.get 'username', (err, name) ->
+      if err?
+        console.log "[ERROR] #{err}"
+      else
+        console.log "[TRACE] attempting to assign edit lock to user <#{name}>"
+        #TODO: 1) check that no one already has lock. 2) map lock to this user. 3) emit 'lock_granted' call.
+  
+  at release_lock_handler: ->
+    release_lock()
+
 

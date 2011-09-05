@@ -464,7 +464,7 @@ div {
   overflow: hidden;
   *zoom: 1;
   position: relative;
-  width: 650px;
+  width: 750px;
 }
 
 /* line 44, style.sass */
@@ -475,23 +475,29 @@ div {
 }
 
 /* line 49, style.sass */
+#editing_notice {
+  color: #111111;
+  color: red;
+}
+
+/* line 53, style.sass */
 #collab_info {
   color: #666666;
   position: relative;
 }
-/* line 52, style.sass */
+/* line 56, style.sass */
 #collab_info li {
   margin-left: 10px;
   color: #444444;
 }
 
-/* line 56, style.sass */
+/* line 60, style.sass */
 #collab_code {
   position: relative;
   visibility: collapse;
 }
 
-/* line 60, style.sass */
+/* line 64, style.sass */
 #lock {
   position: relative;
   cursor: pointer;
@@ -499,23 +505,24 @@ div {
   padding: 10px;
 }
 
-/* line 67, style.sass */
+/* line 71, style.sass */
 #lock_info {
   float: left;
-  width: 450px;
+  width: 550px;
 }
 
-/* line 71, style.sass */
+/* line 75, style.sass */
 #current_editor {
   color: #666666;
 }
 
-/* line 74, style.sass */
+/* line 78, style.sass */
 #mode_panel {
   position: relative;
+  clear: both;
 }
 
-/* line 77, style.sass */
+/* line 82, style.sass */
 #user_panel {
   color: #666666;
   maxheight: 100px;
@@ -525,37 +532,29 @@ div {
   vertical-align: top;
 }
 
-/* line 86, style.sass */
+/* line 91, style.sass */
 #info_panel {
   width: 950px;
   margin: 0 auto;
   overflow: hidden;
   *zoom: 1;
-  width: 650px;
+  width: 750px;
 }
 
-/* line 90, style.sass */
+/* line 95, style.sass */
 #lock_description {
-  color: #666666;
   position: relative;
   float: left;
-  margin-top: 25px;
-  margin-left: 10px;
 }
 
-/* line 97, style.sass */
-.lock_icon:hover {
-  background: gray;
-}
-
-/* line 100, style.sass */
+/* line 103, style.sass */
 .opened {
   width: 50;
   height: 50;
   background-image: url('/images/open_lock.jpg?1314575227');
 }
 
-/* line 106, style.sass */
+/* line 109, style.sass */
 .locked {
   width: 50;
   height: 50;
