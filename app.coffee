@@ -24,5 +24,8 @@ zappa port, ->
   include 'models.coffee'
 
   # actual resources for the website.
-  include 'collabs.coffee'
+  include 'collabs.server.coffee'
+  include 'collabs.client.coffee'
+  include 'collabs.view.coffee'
+
   include 'root.coffee'

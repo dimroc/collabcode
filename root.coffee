@@ -102,6 +102,6 @@
           button id: 'collab_button', class: 'button', ->
             'Create Collab Site'
 
-      div id: 'collab_info'
+      div id: 'collab_info', style: '''clear:both''', ->
       
     script src: '/root.js'
