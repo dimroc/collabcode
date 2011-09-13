@@ -5,8 +5,11 @@
     at 'test_hook': ->
       console.log "HOOK"
 
-    at 'bullshit': ->
-      console.log "bullshit"
+    at 'user_joined': ->
+      console.log "new user <#{@newuser}> joined the room"
+      _GLOBAL.users += @newuser
+      console.log JSON.stringify _GLOBAL.users
+      # _GLOBAL.users.each { |u| console.log u }
 
 #    at 'lock_editor': ->
 #      console.log 'locking editor'
@@ -35,18 +38,25 @@
 
     # Attach main properties to _GLOBAL
     if window?
+      _GLOBAL.view = this
       window._GLOBAL = _GLOBAL
     else
       console.log "[ERROR] Couldn't attach _GLOBAL to window."
 
-    stop_editing = (editor) =>
-      $("#editor").attr("disabled", "disabled")
-      $("#editor").removeAttr("disabled")
+    stop_editing = (editor) ->
+      console.log 'disabling editor'
+      editor.setReadOnly(true)
+      editor.setTheme("ace/theme/dawn")
+      $("#lock_description").addClass("notice")
+      $("#lock_description").removeClass("alert")
       $("#lock").attr("src", "/images/closed_lock.png")
 
-    start_editing = (editor) =>
+    start_editing = (editor) ->
       console.log 'enabling editor'
-      $("#lock_description").addClass("notice")
+      editor.setReadOnly(true)
+      editor.setTheme("ace/theme/dawn")
+      $("#lock_description").addClass("alert")
+      $("#lock_description").removeClass("notice")
       $("#lock").attr("src", "/images/open_lock.jpg")
 
     set_mode = (mode) =>
@@ -74,7 +84,7 @@
       code = $('#collab_code').text()
 
       @editor = ace.edit "editor"
-      @editor.setTheme "ace/theme/twilight"
+      stop_editing @editor
 
       # Create all the modes available in the client editor.
       @TextileMode = require("ace/mode/text").Mode
@@ -128,6 +138,7 @@
       window._GLOBAL.username = prompt "Please enter a username."
       window._GLOBAL.users = [window._GLOBAL.username,]
 
+      console.log "attempting to join room with code #{code}"
       emit 'join_room_handler', username: window._GLOBAL.username, code: code
 
       periodical_update @editor, code

@@ -19,13 +19,40 @@
   @collab_docs.get = (code, callback) =>
     @collab_docs.findOne({ code: code }, callback)
 
-  @collab_docs.set = (code, lines, callback) =>
+  @collab_docs.get_lines = (code, callback) =>
+    @collab_docs.findOne({ code: code }, {code:true, lines: true}, callback)
+
+  @collab_docs.set_lines = (code, lines, callback) =>
     @collab_docs.findAndModify({
       new: true,
       upsert: true,
       query: { code: code },
       update: { code: code, lines: lines }
     }, callback)
+
+  @collab_docs.get_users = (code, callback) =>
+    @collab_docs.findOne({ code: code}, {users:true}, callback)
+
+  @collab_docs.add_user = (code, user, callback) =>
+    @collab_docs.findAndModify({
+      new: true,
+      upsert: true,
+      query: { code: code },
+      update: { $push: { users: user }
+      }, callback)
+
+  @collab_docs.remove_user = (code, user, callback) =>
+    @collab_docs.findAndModify({
+      query: {code: code},
+      update: { $pull: { users: user } },
+      callback
+    })
+
+  @collab_docs.set_locker = (code, user) =>
+    @collab_docs.update ( { code: code }, $set: { locker: locker}, true)
+
+  @collab_docs.get_locker = (code, callback) =>
+    @collab_docs.findOne({code: code}, {locker: true}, callback)
 
   def mongodb: @db
   def collab_docs: @collab_docs

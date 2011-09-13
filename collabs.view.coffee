@@ -38,6 +38,7 @@
     # include page specific javascript, including the ace js files.
     script src: '/javascripts/ace/ace-uncompressed.js'
     script src: '/javascripts/ace/theme-twilight.js'
+    script src: '/javascripts/ace/theme-dawn.js'
 
     for mode in @ace_modes
       if mode.src?

@@ -65,6 +65,8 @@
     socket.set 'username', @username
     socket.set 'code', @code
     socket.join @code
+    socket.broadcast.to(@code).emit 'user_joined', newuser: @username
+    #TODO: emit existing users in the room to connecting user. Probably have to store the existing users in the room too.
 
   at get_users_handler: ->
     console.log "retrieving the current users in the room."
@@ -72,7 +74,7 @@
 
   at collab_updated_handler: ->
     console.log "[TRACE] updating collab with code #{@code} with lines: #{@lines}"
-    collab_docs.set @code, @lines, (err, updated_doc) ->
+    collab_docs.set_lines @code, @lines, (err, updated_doc) ->
       socket.broadcast.to(updated_doc.code).emit 'collab_updated', code: updated_doc.code, lines: updated_doc.lines
 
   at request_lock_handler: ->
