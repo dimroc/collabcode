@@ -1,4 +1,8 @@
 @include = ->
+  def mongodb: @db
+  def collab_docs: @collab_docs
+
+collab_docs_factory = ->
   mongolian = require 'mongolian'
 
   hostname = process.env.MONGO_HOST || 'localhost'
@@ -16,6 +20,7 @@
   console.log 'finished connecting'
 
   @collab_docs = @db.collection "collabs"
+
   @collab_docs.get = (code, callback) =>
     @collab_docs.findOne({ code: code }, callback)
 
@@ -38,8 +43,8 @@
       new: true,
       upsert: true,
       query: { code: code },
-      update: { $push: { users: user }
-      }, callback)
+      update: { $push: { users: user } }
+      , callback })
 
   @collab_docs.remove_user = (code, user, callback) =>
     @collab_docs.findAndModify({
@@ -49,10 +54,12 @@
     })
 
   @collab_docs.set_locker = (code, user) =>
-    @collab_docs.update ( { code: code }, $set: { locker: locker}, true)
+    @collab_docs.update( { code: code }, $set: { locker: locker}, true, false )
 
   @collab_docs.get_locker = (code, callback) =>
     @collab_docs.findOne({code: code}, {locker: true}, callback)
 
-  def mongodb: @db
-  def collab_docs: @collab_docs
+  return @collab_docs
+
+# allow hook for unit tests to access model layer via 'require'
+exports.create_collab_docs = collab_docs_factory

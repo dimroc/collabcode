@@ -26,7 +26,7 @@
 
           '''
       text_to_send += "#{collab.site}"
-        
+
       server.send({
         from: "#{username}",
         to: "#{email_address}",

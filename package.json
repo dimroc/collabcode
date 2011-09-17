@@ -10,6 +10,7 @@
     , "zappa": "0.2.x"
     , "mongolian": "0.1.x"
     , "emailjs": "0.1.x"
+    , "expresso": "0.8.x"
   }
   , "engine": "node 0.4.x"
 }
