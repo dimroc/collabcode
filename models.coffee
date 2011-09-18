@@ -2,6 +2,11 @@
   def mongodb: @db
   def collab_docs: @collab_docs
 
+close = ->
+  console.log '[TRACE] Closing db connection.'
+  # this doesn't work! Waiting for update from library.
+  @db.close()
+
 collab_docs_factory = ->
   mongolian = require 'mongolian'
 
@@ -15,7 +20,7 @@ collab_docs_factory = ->
   else
     connection_string = "#{hostname}/#{dbname}"
 
-  console.log connection_string
+  console.log 'connecting to: ' + connection_string
   @db = new mongolian connection_string
   console.log 'finished connecting'
 
@@ -43,23 +48,27 @@ collab_docs_factory = ->
       new: true,
       upsert: true,
       query: { code: code },
-      update: { $push: { users: user } }
-      , callback })
+      update: { $push: { users: user }},
+      callback })
 
   @collab_docs.remove_user = (code, user, callback) =>
     @collab_docs.findAndModify({
       query: {code: code},
-      update: { $pull: { users: user } },
+      update: { $pull: { users: user }},
       callback
     })
 
   @collab_docs.set_locker = (code, user) =>
-    @collab_docs.update( { code: code }, $set: { locker: locker}, true, false )
+    console.log "[TRACE] Setting locker for room #{code} to user #{user}"
+    @collab_docs.update( { code: code }, {$set: { locker: user}}, true, false )
 
   @collab_docs.get_locker = (code, callback) =>
-    @collab_docs.findOne({code: code}, {locker: true}, callback)
+    console.log "[TRACE] Attempting to retrieve locker for room #{code}"
+    @collab_docs.findOne({code: code}, callback)
+    # @collab_docs.findOne({code: code}, {locker: true}, callback)
 
   return @collab_docs
 
 # allow hook for unit tests to access model layer via 'require'
 exports.create_collab_docs = collab_docs_factory
+exports.close = close
