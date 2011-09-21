@@ -1,20 +1,37 @@
+vows = require 'vows'
 assert = require 'assert'
 
-exports['test the ability to test'] = ->
-  assert.equal 6,6
+basic_suite = vows.describe('basic tests').addBatch
+  'first test':
+    topic: true,
+    'is run first': (topic) ->
+      assert.ok topic
 
-exports['test the ability to test asynchronously'] = (beforeExit) ->
-  n = 0
-  setTimeout ->
-    ++n
-    assert.ok true
-  , 200
+basic_suite.export(module)
 
-  setTimeout ->
-    ++n
-    assert.ok true
-  , 200
+suite = vows
+  .describe('Ability to keep a Vow')
+  .addBatch
+    'when simply invoking a test':
+      topic: 1
+      'we should pass that the topic can equal 1': (topic) ->
+        assert.equal 1, topic
+    'when running in parallel via another context':
+      topic: ->
+        setTimeout @callback, 200
+        return
+      'we should still fulfill our vow': ->
+        assert.ok true
+      'even when having parallel dependencies (nested contexts)':
+        topic: ->
+          setTimeout => # We must use the fat arrow here to bind the this pointer to the topic context
+            @callback null, false
+            # We explicitly place return at the end of our callback so vows doesn't think we return a value
+            return
+          , 200
+          return
+        'we still keep our vow': (err, val) ->
+          assert.ok val == false
 
-  beforeExit ->
-    assert.equal 2, n, 'Ensure both timeouts are called'
+suite.export(module)
 

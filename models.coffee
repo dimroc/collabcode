@@ -1,4 +1,5 @@
 @include = ->
+  # TODO: Have Zapp include work as advertised by invoking factory functions below.
   def mongodb: @db
   def collab_docs: @collab_docs
 
@@ -7,7 +8,7 @@ close = ->
   # this doesn't work! Waiting for update from library.
   @db.close()
 
-collab_docs_factory = ->
+collab_docs_factory = (is_logging_to_console)->
   mongolian = require 'mongolian'
 
   hostname = process.env.MONGO_HOST || 'localhost'
@@ -21,8 +22,17 @@ collab_docs_factory = ->
     connection_string = "#{hostname}/#{dbname}"
 
   console.log 'connecting to: ' + connection_string
-  @db = new mongolian connection_string
-  console.log 'finished connecting'
+  noop_logger =
+   log:
+     debug: ->
+     info: ->
+     warn: ->
+     error: ->
+
+  if is_logging_to_console
+    @db = new mongolian connection_string
+  else
+    @db = new mongolian connection_string, noop_logger
 
   @collab_docs = @db.collection "collabs"
 
@@ -67,8 +77,10 @@ collab_docs_factory = ->
     @collab_docs.findOne({code: code}, callback)
     # @collab_docs.findOne({code: code}, {locker: true}, callback)
 
+  console.log 'returning collab collection'
   return @collab_docs
 
 # allow hook for unit tests to access model layer via 'require'
 exports.create_collab_docs = collab_docs_factory
 exports.close = close
+
