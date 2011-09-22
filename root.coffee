@@ -1,3 +1,5 @@
+logger = require('log4js').getLogger()
+
 @include = ->
   requiring 'emailjs', 'os', 'net', 'url'
 
@@ -12,7 +14,7 @@
     password = process.env.SENDGRID_PASSWORD
 
     if username?
-      console.log "[TRACE] mailer constructed. attempting to send to #{email_address} from #{username}"
+      logger.debug "mailer constructed. attempting to send to #{email_address} from #{username}"
 
       server = emailjs.server.connect({
         user: username,
@@ -32,14 +34,14 @@
         to: "#{email_address}",
         subject: "[Collab][Code] Collab Site Created",
         text: text_to_send
-      }, (err, message) -> console.log(err || message))
+      }, (err, message) -> logger.debug(err || message))
 
   get '/': ->
-    console.log '[TRACE] request URL ' + request.url
+    logger.debug 'request URL ' + request.url
     render 'index'
 
   at collab_requested: ->
-    console.log '[TRACE] received collab request with email ' + @email
+    logger.debug 'received collab request with email ' + @email
     current_date = new Date()
     if @email?
       collab_code = murmurhash.murmurhash(@email, current_date.getTime())
@@ -47,14 +49,14 @@
       collab_code = murmurhash.murmurhash('collab_key' + current_date.getTime(), current_date.getTime())
     collab_code = collab_code.toString 16
 
-    console.log '[TRACE] got code ' + collab_code
+    logger.debug 'got code ' + collab_code
     base_address = process.env.DOMAIN || app.address().address + ':' + app.address().port
 
     collab_site = 'http://' + base_address + "/collabs/#{collab_code}"
-    console.log '[TRACE] got site ' + collab_site
+    logger.debug ' got site ' + collab_site
     collab = { site: collab_site, code: collab_code }
 
-    console.log '[TRACE] dispatching collab ' + JSON.stringify collab
+    logger.debug 'dispatching collab ' + JSON.stringify collab
     emit 'collab_created', collab: collab
 
     if @email? and @email != ""
@@ -64,7 +66,7 @@
     connect()
 
     at collab_created: ->
-      console.log 'client received collab site ' + JSON.stringify @collab
+      logger.debug 'client received collab site ' + JSON.stringify @collab
       $('#collab_info').append(
         "<ul><li><a href='collabs/#{@collab.code}'>" +
         document.URL + "collabs/#{@collab.code}" +

@@ -14,7 +14,7 @@
     redirect '/'
 
   get '/collabs/:id': ->
-    console.log "[TRACE] retrieve id #{@id}"
+    logger.debug "retrieve id #{@id}"
 
     ace_modes = [
       {name: 'text'}
@@ -29,7 +29,7 @@
 
     code = @id
     collab_docs.get @id, (err, updated_doc) ->
-      console.log "[TRACE] callback from findOne: #{err} and #{updated_doc}"
+      logger.debug "callback from findOne: #{err} and #{updated_doc}"
       if err?
         lines = [err,]
       else if updated_doc?
@@ -47,21 +47,21 @@
       render 'collab', {code, ace_modes, lines}
 
   release_lock = ->
-    console.log '[TRACE] releasing the edit lock enabling anyone to edit file.'
+    logger.debug ' releasing the edit lock enabling anyone to edit file.'
     # TODO: update db with info on the user lock mapping.
     emit 'lock_released'
   
   at connection: ->
-    console.log "CONNECTION"
+    logger.debug "CONNECTION"
     emit 'test_hook'
 
   at disconnect: ->
     socket.get 'username', (err, name) ->
-      console.log "#{name} disconnected."
+      logger.debug "#{name} disconnected."
       #TODO: Remove lock if it exists for that user.
 
   at join_room_handler: ->
-    console.log "user <#{@username}> joining room #{@code}."
+    logger.debug "user <#{@username}> joining room #{@code}."
     socket.set 'username', @username
     socket.set 'code', @code
     socket.join @code
@@ -69,20 +69,20 @@
     #TODO: emit existing users in the room to connecting user. Probably have to store the existing users in the room too.
 
   at get_users_handler: ->
-    console.log "retrieving the current users in the room."
+    logger.debug "retrieving the current users in the room."
     #TODO: return the users for the room @code.
 
   at collab_updated_handler: ->
-    console.log "[TRACE] updating collab with code #{@code} with lines: #{@lines}"
+    logger.debug "updating collab with code #{@code} with lines: #{@lines}"
     collab_docs.set_lines @code, @lines, (err, updated_doc) ->
       socket.broadcast.to(updated_doc.code).emit 'collab_updated', code: updated_doc.code, lines: updated_doc.lines
 
   at request_lock_handler: ->
     socket.get 'username', (err, name) ->
       if err?
-        console.log "[ERROR] #{err}"
+        logger.debug "[ERROR] #{err}"
       else
-        console.log "[TRACE] attempting to assign edit lock to user <#{name}>"
+        logger.debug "attempting to assign edit lock to user <#{name}>"
         #TODO: 1) check that no one already has lock. 2) map lock to this user. 3) emit 'lock_granted' call.
   
   at release_lock_handler: ->

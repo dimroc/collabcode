@@ -1,36 +1,38 @@
+logger = require('log4js').getLogger()
+
 @include = ->
   client '/collab.js': ->
     connect()
 
     at 'test_hook': ->
-      console.log "HOOK"
+      logger.debug "HOOK"
 
     at 'user_joined': ->
-      console.log "new user <#{@newuser}> joined the room"
+      logger.debug "new user <#{@newuser}> joined the room"
       _GLOBAL.users += @newuser
-      console.log JSON.stringify _GLOBAL.users
-      # _GLOBAL.users.each { |u| console.log u }
+      logger.debug JSON.stringify _GLOBAL.users
+      # _GLOBAL.users.each { |u| logger.debug u }
 
 #    at 'lock_editor': ->
-#      console.log 'locking editor'
+#      logger.debug 'locking editor'
 #      editor = $("#editor").data("editor_hook")
 #      stopfunc = $("#editor").data("stop_editing_hook")
 #      stopfunc editor
 #
 #    at 'editing_granted': ->
-#      console.log 'received socket.io request to enable editor'
+#      logger.debug 'received socket.io request to enable editor'
 #      editor = $("#editor").data("editor_hook")
 #      startfunc = $("#editor").data("start_editing_hook")
 #      startfunc editor
 #
 #    at collab_updated: ->
-#     console.log 'received updated doc for code ' + @code
+#     logger.debug 'received updated doc for code ' + @code
 #      mycode = $('#collab_code').text()
 #      if mycode == @code
 #        updatefunc = $("#editor").data("update_hook")
 #        updatefunc @lines
 #      else
-#        console.log '[ERROR] received information about the wrong code!'
+#        logger.debug '[ERROR] received information about the wrong code!'
 
     _GLOBAL = {
       isLocked: false
@@ -41,10 +43,10 @@
       _GLOBAL.view = this
       window._GLOBAL = _GLOBAL
     else
-      console.log "[ERROR] Couldn't attach _GLOBAL to window."
+      logger.debug "[ERROR] Couldn't attach _GLOBAL to window."
 
     stop_editing = (editor) ->
-      console.log 'disabling editor'
+      logger.debug 'disabling editor'
       editor.setReadOnly(true)
       editor.setTheme("ace/theme/dawn")
       $("#lock_description").addClass("notice")
@@ -52,7 +54,7 @@
       $("#lock").attr("src", "/images/closed_lock.png")
 
     start_editing = (editor) ->
-      console.log 'enabling editor'
+      logger.debug 'enabling editor'
       editor.setReadOnly(true)
       editor.setTheme("ace/theme/dawn")
       $("#lock_description").addClass("alert")
@@ -60,7 +62,7 @@
       $("#lock").attr("src", "/images/open_lock.jpg")
 
     set_mode = (mode) =>
-      console.log 'setting mode to ' + JSON.stringify(mode)
+      logger.debug 'setting mode to ' + JSON.stringify(mode)
       @editor.getSession().setMode(new @ModeMap[mode])
 
     update_ace_document = (lines) =>
@@ -68,14 +70,14 @@
       document = editor.getSession().getDocument()
       if document?
         if document.getLength() > 0
-          console.log "remove #{document.getLength()} lines from doc"
+          logger.debug "remove #{document.getLength()} lines from doc"
           document.removeLines(0, document.getLength())
         document.insertLines(0, lines)
 
     periodical_update = (editor, code) =>
       setInterval ->
         if window._GLOBAL.isLocked
-          console.log 'triggering periodical update'
+          logger.debug 'triggering periodical update'
           lines = editor.getSession().getDocument().getAllLines()
           emit 'collab_update', code: code, lines: lines
       , 5000
@@ -122,9 +124,9 @@
       #
       $("#lock").click(->
         if !@isLocked
-          console.log 'requesting lock'
+          logger.debug 'requesting lock'
         else
-          console.log 'release lock'
+          logger.debug 'release lock'
       )
 
       $("#editor").data("editor_hook", @editor)
@@ -138,7 +140,7 @@
       window._GLOBAL.username = prompt "Please enter a username."
       window._GLOBAL.users = [window._GLOBAL.username,]
 
-      console.log "attempting to join room with code #{code}"
+      logger.debug "attempting to join room with code #{code}"
       emit 'join_room_handler', username: window._GLOBAL.username, code: code
 
       periodical_update @editor, code
