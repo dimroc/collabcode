@@ -9,3 +9,4 @@ node_modules/
 tags
 .sass-cache/
 .monitor
+public/javascripts/logger.js

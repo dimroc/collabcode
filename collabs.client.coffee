@@ -1,6 +1,5 @@
-logger = require('log4js').getLogger()
-
 @include = ->
+  logger = require('log4js').getLogger()
   client '/collab.js': ->
     connect()
 

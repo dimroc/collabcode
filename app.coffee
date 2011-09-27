@@ -1,7 +1,6 @@
 port = Number(process.env.VMC_APP_PORT || process.env.C9_PORT || process.env.PORT || 3000)
 zappa = require('zappa')
-
-# export NODE_ENV=production
+logger = require('log4js').getLogger()
 
 zappa port, ->
   enable 'serve jquery'

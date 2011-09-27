@@ -1,16 +1,5 @@
-logger = require('log4js').getLogger()
-
-@include = ->
-  # TODO: Have Zapp include work as advertised by invoking factory functions below.
-  def mongodb: @db
-  def collab_docs: @collab_docs
-
-close = ->
-  logger.debug 'Closing db connection.'
-  # this doesn't work! Waiting for update from library.
-  @db.close()
-
-collab_docs_factory = (is_logging_to_console)->
+collab_docs_factory = (is_logging_to_console) ->
+  logger = require('log4js').getLogger()
   mongolian = require 'mongolian'
 
   hostname = process.env.MONGO_HOST || 'localhost'
@@ -25,14 +14,16 @@ collab_docs_factory = (is_logging_to_console)->
 
   logger.debug 'connecting to: ' + connection_string
   noop_logger =
-   log:
-     debug: ->
-     info: ->
-     warn: ->
-     error: ->
+    log:
+      debug: ->
+      info: ->
+      warn: ->
+      error: ->
+  log4js2mongolian =
+    log: logger
 
-  if is_logging_to_console
-    @db = new mongolian connection_string
+  if is_logging_to_console? && is_logging_to_console
+    @db = new mongolian connection_string, log4js2mongolian 
   else
     @db = new mongolian connection_string, noop_logger
 
@@ -82,6 +73,22 @@ collab_docs_factory = (is_logging_to_console)->
 
   logger.debug 'returning collab collection'
   return @collab_docs
+
+@include = ->
+  # The difficulty in containing the 'this' pointer and knowing when or what dynamic code
+  # has been loaded has led to this weird model below where I'm literally importing myself
+  # to call the factory function. 
+  # Investigate taking a class based solution to this so I can encapsulate code in one class
+  # more elegantly.
+  model_factory = require 'models'
+  @collab_docs = model_factory.create_collab_docs()
+  def collab_docs: @collab_docs
+
+close = ->
+  logger = require('log4js').getLogger()
+  logger.debug 'Closing db connection.'
+  # TODO:this doesn't work! Waiting for update from library.
+  @db.close()
 
 # allow hook for unit tests to access model layer via 'require'
 exports.create_collab_docs = collab_docs_factory

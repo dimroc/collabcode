@@ -1,7 +1,6 @@
-logger = require('log4js').getLogger()
-
 @include = ->
   requiring 'emailjs', 'os', 'net', 'url'
+  def logger: require('log4js').getLogger()
 
   # I'm not happy with this, but node searches for modules relative
   # to where zappa launches which is deep in the node_modules dir.
