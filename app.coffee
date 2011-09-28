@@ -3,7 +3,7 @@ port = Number(process.env.PORT || 3000)
 zappa = require('zappa')
 logger = require('log4js').getLogger()
 
-logger.info "launcing on port # #{port}"
+logger.info "launching on port # #{port}"
 
 zappa port, ->
   log4js = require('log4js')
@@ -15,7 +15,7 @@ zappa port, ->
 
   publicDir = __dirname + '/public'
   use log4js.connectLogger logger
-  use 'bodyParser', 'cookieParser', express.session({secret: 'collaborative coffee'})
+  use 'bodyParser', 'cookieParser'
   use 'methodOverride', app.router
   use express.compiler(src: publicDir, enable: ['sass', 'coffeescript'])
   use 'static'

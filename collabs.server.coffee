@@ -7,8 +7,8 @@
 
 
 @include = ->
-  enable 'serve now'
-  enable 'serve socket.io'
+  # enable 'serve now'
+  # enable 'serve socket.io'
 
   get '/collabs': ->
     redirect '/'
