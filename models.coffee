@@ -19,6 +19,7 @@ collab_docs_factory = (is_logging_to_console) ->
       info: ->
       warn: ->
       error: ->
+
   log4js2mongolian =
     log: logger
 
