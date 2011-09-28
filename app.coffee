@@ -1,4 +1,5 @@
-port = Number(process.env.VMC_APP_PORT || process.env.C9_PORT || process.env.PORT || 3000)
+# port = Number(process.env.VMC_APP_PORT || process.env.C9_PORT || process.env.PORT || 3000)
+port = Number(process.env.PORT || 3000)
 zappa = require('zappa')
 
 zappa port, ->
