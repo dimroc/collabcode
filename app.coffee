@@ -1,6 +1,9 @@
 # port = Number(process.env.VMC_APP_PORT || process.env.C9_PORT || process.env.PORT || 3000)
 port = Number(process.env.PORT || 3000)
 zappa = require('zappa')
+logger = require('log4js').getLogger()
+
+logger.info "launcing on port # #{port}"
 
 zappa port, ->
   log4js = require('log4js')
