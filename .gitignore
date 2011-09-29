@@ -10,3 +10,4 @@ tags
 .sass-cache/
 .monitor
 public/javascripts/logger.js
+heroku.config
