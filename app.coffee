@@ -10,7 +10,7 @@ zappa port, ->
   logger = log4js.getLogger()
 
   enable 'serve jquery'
-  io.set 'transports', ['xhr-polling', 'websocket', 'flashsocket', 'htmlfile']
+  io.set 'transports', ['websocket', 'xhr-polling', 'htmlfile']
   io.set 'log level', 2
 
   publicDir = __dirname + '/public'
