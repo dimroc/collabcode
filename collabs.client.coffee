@@ -1,16 +1,21 @@
 @include = ->
+  sys = require('sys')
   logger = require('log4js').getLogger()
   client '/collab.js': ->
     connect()
-
-    at 'test_hook': ->
-      logger.debug "HOOK"
 
     at 'user_joined': ->
       logger.debug "new user <#{@newuser}> joined the room"
       _GLOBAL.users += @newuser
       logger.debug JSON.stringify _GLOBAL.users
       # _GLOBAL.users.each { |u| logger.debug u }
+
+    at 'current users update': ->
+      logger.debug "updating current users list: #{sys.inspect @users}"
+      _GLOBAL.users = @users
+
+    at 'editing locker': ->
+      logger.debug "user <#{@locker} locked the file for editing"
 
 #    at 'lock_editor': ->
 #      logger.debug 'locking editor'

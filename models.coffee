@@ -64,6 +64,10 @@ collab_docs_factory = (is_logging_to_console) ->
       update: { $pull: { users: user }}
     }, callback)
 
+  @collab_docs.clear_locker = (code) =>
+    logger.debug "Clearing locker for room #{code}"
+    @collab_docs.update( { code: code }, { $unset: { locker: 1 }})
+
   @collab_docs.set_locker = (code, user) =>
     logger.debug "Setting locker for room #{code} to user #{user}"
     @collab_docs.update( { code: code }, {$set: { locker: user}}, true, false )

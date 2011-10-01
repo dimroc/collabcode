@@ -50,6 +50,17 @@ models_suite = vows.describe('Creating the data layer')
           assert.isNull err
           assert.equal val.locker, fixture.user
           return
+
+      "and we try to clear said locker":
+        topic: (collab_docs) ->
+          collab_docs.clear_locker fixture.code
+          return collab_docs
+
+        "vow locker is clear": (collab_docs) ->
+          collab_docs.get_locker fixture.code, (err, val) ->
+            assert.isNull err
+            assert.isUndefined val.locker
+
 .addBatch # vows to handle line insertions
   "Given we can connect to the database":
     topic: -> 
