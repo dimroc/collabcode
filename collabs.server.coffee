@@ -42,22 +42,19 @@
 
       render 'collab', {code, ace_modes, lines}
 
-  release_lock = ->
-    logger.debug ' releasing the edit lock enabling anyone to edit file.'
-    # Get code / room channel from socket.io user info
-    socket.get 'code', (err, code) ->
-      collab_docs.clear_locker code
-      emit 'lock_released'
-
   at connection: ->
     logger.debug "CONNECTION"
 
   at disconnect: ->
     socket.get 'username', (err, name) ->
       logger.debug "#{name} disconnected."
-    # Get code / room channel from socket.io user info
-    socket.get 'code', (err, code) ->
-      collab_docs.clear_locker code
+      # Get code / room channel from socket.io user info
+      socket.get 'code', (err, code) ->
+        collab_docs.clear_locker code
+        collab_docs.remove_user code, name
+        collab_docs.get_users code, (err, val) =>
+          socket.broadcast.to(code).emit 'current users update', users: users
+
 
   at join_room_handler: ->
     logger.debug "user <#{@username}> joining room #{@code}."
@@ -67,10 +64,12 @@
 
     # Updating everyone in room with the current users
     collab_docs.add_user @code, @username, (err, val) =>
-      collab_docs.get_users @code, (err, users) =>
+      collab_docs.get_users @code, (err, val) =>
+        users = val.users;
         logger.debug "broadcasting current users:"
         logger.debug users
         socket.broadcast.to(@code).emit 'current users update', users: users
+        emit 'current users update', users: users
 
     # Update connecting user with the current locker, if any
     collab_docs.get_locker @code, (err, val) =>
@@ -79,21 +78,34 @@
 
   at get_users_handler: ->
     logger.debug "retrieving the current users in the room."
-    #TODO: return the users for the room @code.
+    collab_docs.get_users @code, (err, users) =>
+      socket.emit 'user update', users
 
   at collab_updated_handler: ->
     logger.debug "updating collab with code #{@code} with lines: #{@lines}"
     collab_docs.set_lines @code, @lines, (err, updated_doc) ->
       socket.broadcast.to(updated_doc.code).emit 'collab_updated', code: updated_doc.code, lines: updated_doc.lines
 
-  at request_lock_handler: ->
+  at 'toggle lock handler': ->
     socket.get 'username', (err, name) ->
-      if err?
-        logger.debug "[ERROR] #{err}"
-      else
-        logger.debug "attempting to assign edit lock to user <#{name}>"
-        #TODO: 1) check that no one already has lock. 2) map lock to this user. 3) emit 'lock_granted' call.
-
-  at release_lock_handler: ->
-    release_lock()
+      socket.get 'code', (err, code) ->
+        collab_docs.get_locker code, (err, val) ->
+          if err?
+            logger.debug "[ERROR] #{err}"
+          else
+            if val.locker?
+              # A locker exists
+              if val.locker == name
+                logger.debug "Releasing the lock for room #{code} from user #{name}"
+                collab_docs.clear_locker code
+                #TODO: Figure out how to broadcast to everyone including myself
+                socket.broadcast.to(code).emit 'release lock'
+                emit 'release lock'
+              else
+                logger.debug "Cannot retrieve lock, already locked by #{val.locker}"
+            else
+              logger.debug "Assigning edit lock for room #{code} to user <#{name}>"
+              collab_docs.set_locker code, name
+              socket.broadcast.to(code).emit 'editing locked', locker: name
+              emit 'editing locked for me', locker: name
 

@@ -8,7 +8,6 @@
           img id: 'lock', class: 'lock_icon', src: "/images/closed_lock.png", width: "50px"
           div ->
             span id: 'current_editor', ->
-              text "Current User: bogus user"
             span id: 'collab_code', ->
               text "#{@code}"
           div id: 'lock_description', class: 'notice', ->
@@ -18,11 +17,7 @@
 
         div id: 'user_panel', ->
           h4 'Viewers:'
-          ol ->
-            li 'some user1'
-            li 'some user1'
-            li 'some user1'
-            li 'some user1'
+          ol id: 'user_list', ->
 
       div id: 'content', class: 'span-24', ->
         div id: 'mode_panel', class: 'header', ->

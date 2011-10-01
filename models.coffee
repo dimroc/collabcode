@@ -58,6 +58,7 @@ collab_docs_factory = (is_logging_to_console) ->
     }, callback)
 
   @collab_docs.remove_user = (code, user, callback) =>
+    logger.debug "Removing user #{user} from room #{code}"
     callback ?= ->
     @collab_docs.findAndModify({
       query: {code: code},
@@ -74,7 +75,7 @@ collab_docs_factory = (is_logging_to_console) ->
 
   @collab_docs.get_locker = (code, callback) =>
     logger.debug "Attempting to retrieve locker for room #{code}"
-    @collab_docs.findOne({code: code}, callback)
+    @collab_docs.findOne( {code: code}, callback)
 
   logger.debug 'returning collab collection'
   return @collab_docs

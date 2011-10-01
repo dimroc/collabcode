@@ -1,33 +1,45 @@
 @include = ->
-  sys = require('sys')
+  enable 'server jquery'
   logger = require('log4js').getLogger()
   client '/collab.js': ->
     connect()
 
-    at 'user_joined': ->
-      logger.debug "new user <#{@newuser}> joined the room"
-      _GLOBAL.users += @newuser
-      logger.debug JSON.stringify _GLOBAL.users
-      # _GLOBAL.users.each { |u| logger.debug u }
-
     at 'current users update': ->
-      logger.debug "updating current users list: #{sys.inspect @users}"
+      logger.debug "updating current users list:"
+      logger.debug @users
       _GLOBAL.users = @users
+      $("#user_list").empty()
+      for user in @users
+        $("#user_list").append("<li>#{user}</li>")
 
-    at 'editing locker': ->
-      logger.debug "user <#{@locker} locked the file for editing"
+    # TODO: Consolidate the bottom two functions.
+    at 'editing locked': ->
+      logger.debug "user <#{@locker}> locked the file for editing"
+      $("#current_editor").empty()
+      $("#current_editor").append("Current user: #{@locker}")
 
-#    at 'lock_editor': ->
-#      logger.debug 'locking editor'
-#      editor = $("#editor").data("editor_hook")
-#      stopfunc = $("#editor").data("stop_editing_hook")
-#      stopfunc editor
-#
+    at 'editing locked for me': ->
+      logger.debug "user <#{@locker}> locked the file for editing"
+      $("#current_editor").empty()
+      $("#current_editor").append("Current user: #{@locker}")
+
+      editor = $("#editor").data("editor_hook")
+      startfunc = $("#editor").data("start_editing_hook")
+      startfunc editor
+
+    at 'release lock': ->
+      logger.debug 'release lock'
+      $("#current_editor").empty()
+      editor = $("#editor").data("editor_hook")
+      stopfunc = $("#editor").data("stop_editing_hook")
+      stopfunc editor
+
+    #TODO: Unlock if user toggling lock already has the lock
+    # at 'lock editor': ->
+      # logger.debug 'locking editor'
+
 #    at 'editing_granted': ->
 #      logger.debug 'received socket.io request to enable editor'
-#      editor = $("#editor").data("editor_hook")
-#      startfunc = $("#editor").data("start_editing_hook")
-#      startfunc editor
 #
 #    at collab_updated: ->
 #     logger.debug 'received updated doc for code ' + @code
@@ -59,8 +71,8 @@
 
     start_editing = (editor) ->
       logger.debug 'enabling editor'
-      editor.setReadOnly(true)
-      editor.setTheme("ace/theme/dawn")
+      editor.setReadOnly(false)
+      editor.setTheme("ace/theme/twilight")
       $("#lock_description").addClass("alert")
       $("#lock_description").removeClass("notice")
       $("#lock").attr("src", "/images/open_lock.jpg")
@@ -126,12 +138,9 @@
       # bug in ace prevents this from working well.
       # @editor.getSession().setUseWrapMode(true)
       #
-      $("#lock").click(->
-        if !@isLocked
-          logger.debug 'requesting lock'
-        else
-          logger.debug 'release lock'
-      )
+      $("#lock").click ->
+        logger.debug 'toggling lock'
+        emit 'toggle lock handler'
 
       $("#editor").data("editor_hook", @editor)
       $("#editor").data("update_hook", update_ace_document)
