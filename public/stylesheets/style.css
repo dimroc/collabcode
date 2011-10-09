@@ -525,14 +525,19 @@ div {
 /* line 82, style.sass */
 #user_panel {
   color: #666666;
-  maxheight: 100px;
-  width: 150px;
+  width: 160px;
   overflow: auto;
   float: left;
   vertical-align: top;
 }
 
-/* line 91, style.sass */
+/* line 90, style.sass */
+#user_list {
+  height: 80px;
+  overflow: auto;
+}
+
+/* line 94, style.sass */
 #info_panel {
   width: 950px;
   margin: 0 auto;
@@ -541,22 +546,29 @@ div {
   width: 750px;
 }
 
-/* line 95, style.sass */
+/* line 98, style.sass */
 #lock_description {
   position: relative;
   float: left;
+  width: auto;
 }
 
-/* line 103, style.sass */
+/* line 107, style.sass */
 .opened {
   width: 50;
   height: 50;
   background-image: url('/images/open_lock.jpg?1314575227');
 }
 
-/* line 109, style.sass */
+/* line 113, style.sass */
 .locked {
   width: 50;
   height: 50;
   background-image: url('/images/closed_lock.png?1314575227');
+}
+
+/* line 119, style.sass */
+.lock_button {
+  height: 80px;
+  width: 65px;
 }

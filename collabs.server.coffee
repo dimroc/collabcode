@@ -1,7 +1,3 @@
-# TODO:
-# 3) List users in the current channel.
-# 4) Implement locking mechanism for users
-
 @include = ->
   get '/collabs': ->
     redirect '/'
@@ -53,7 +49,8 @@
         collab_docs.clear_locker code
         collab_docs.remove_user code, name
         collab_docs.get_users code, (err, val) =>
-          socket.broadcast.to(code).emit 'current users update', users: users
+          if val? && val.users?
+            socket.broadcast.to(code).emit 'current users update', users: val.users
 
 
   at join_room_handler: ->
@@ -73,7 +70,7 @@
 
     # Update connecting user with the current locker, if any
     collab_docs.get_locker @code, (err, val) =>
-      if val.locker?
+      if val? && val.locker?
         emit 'editing locked', locker: val.locker
 
   at get_users_handler: ->
@@ -81,10 +78,10 @@
     collab_docs.get_users @code, (err, users) =>
       socket.emit 'user update', users
 
-  at collab_updated_handler: ->
+  at 'collab updated handler': ->
     logger.debug "updating collab with code #{@code} with lines: #{@lines}"
     collab_docs.set_lines @code, @lines, (err, updated_doc) ->
-      socket.broadcast.to(updated_doc.code).emit 'collab_updated', code: updated_doc.code, lines: updated_doc.lines
+      socket.broadcast.to(updated_doc.code).emit 'collab updated', code: updated_doc.code, lines: updated_doc.lines
 
   at 'toggle lock handler': ->
     socket.get 'username', (err, name) ->
@@ -93,7 +90,7 @@
           if err?
             logger.debug "[ERROR] #{err}"
           else
-            if val.locker?
+            if val? && val.locker?
               # A locker exists
               if val.locker == name
                 logger.debug "Releasing the lock for room #{code} from user #{name}"

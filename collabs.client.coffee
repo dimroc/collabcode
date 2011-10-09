@@ -34,21 +34,14 @@
       stopfunc = $("#editor").data("stop_editing_hook")
       stopfunc editor
 
-    #TODO: Unlock if user toggling lock already has the lock
-    # at 'lock editor': ->
-      # logger.debug 'locking editor'
-
-#    at 'editing_granted': ->
-#      logger.debug 'received socket.io request to enable editor'
-#
-#    at collab_updated: ->
-#     logger.debug 'received updated doc for code ' + @code
-#      mycode = $('#collab_code').text()
-#      if mycode == @code
-#        updatefunc = $("#editor").data("update_hook")
-#        updatefunc @lines
-#      else
-#        logger.debug '[ERROR] received information about the wrong code!'
+    at 'collab updated': ->
+      logger.debug 'received updated doc for code ' + @code
+      mycode = $('#collab_code').text()
+      if mycode == @code
+        updatefunc = $("#editor").data("update_hook")
+        updatefunc @lines
+      else
+        logger.debug '[ERROR] received information about the wrong code!'
 
     _GLOBAL = {
       isLocked: false
@@ -67,7 +60,9 @@
       editor.setTheme("ace/theme/dawn")
       $("#lock_description").addClass("notice")
       $("#lock_description").removeClass("alert")
-      $("#lock").attr("src", "/images/closed_lock.png")
+      $("#lock_icon").attr("src", "/images/open_lock.jpg")
+      $("#lock_span").text("lock")
+      window._GLOBAL.isLocked = false
 
     start_editing = (editor) ->
       logger.debug 'enabling editor'
@@ -75,7 +70,9 @@
       editor.setTheme("ace/theme/twilight")
       $("#lock_description").addClass("alert")
       $("#lock_description").removeClass("notice")
-      $("#lock").attr("src", "/images/open_lock.jpg")
+      $("#lock_icon").attr("src", "/images/closed_lock.png")
+      $("#lock_span").text("unlock")
+      window._GLOBAL.isLocked = true
 
     set_mode = (mode) =>
       logger.debug 'setting mode to ' + JSON.stringify(mode)
@@ -93,10 +90,14 @@
     periodical_update = (editor, code) =>
       setInterval ->
         if window._GLOBAL.isLocked
-          logger.debug 'triggering periodical update'
+          logger.debug 'triggering periodical update push'
           lines = editor.getSession().getDocument().getAllLines()
-          emit 'collab_update', code: code, lines: lines
+          emit 'collab updated handler', code: code, lines: lines
       , 5000
+
+    dispatch_toggle_lock_request = ->
+      logger.debug 'toggling lock'
+      emit 'toggle lock handler'
 
     $().ready =>
       code = $('#collab_code').text()
@@ -138,9 +139,6 @@
       # bug in ace prevents this from working well.
       # @editor.getSession().setUseWrapMode(true)
       #
-      $("#lock").click ->
-        logger.debug 'toggling lock'
-        emit 'toggle lock handler'
 
       $("#editor").data("editor_hook", @editor)
       $("#editor").data("update_hook", update_ace_document)
@@ -152,6 +150,7 @@
       window._GLOBAL.editor = @editor
       window._GLOBAL.username = prompt "Please enter a username."
       window._GLOBAL.users = [window._GLOBAL.username,]
+      window._GLOBAL.dispatch_toggle_lock_request = dispatch_toggle_lock_request 
 
       logger.debug "attempting to join room with code #{code}"
       emit 'join_room_handler', username: window._GLOBAL.username, code: code

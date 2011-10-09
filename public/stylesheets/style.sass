@@ -82,11 +82,14 @@ div
 #user_panel
   @include quiet
   //:display inline
-  :maxheight 100px
-  :width 150px
+  :width 160px
   :overflow auto
   :float left
   :vertical-align top
+
+#user_list
+  :height 80px
+  :overflow auto
 
 #info_panel
   @include container
@@ -95,6 +98,7 @@ div
 #lock_description
   :position relative
   :float left
+  :width auto
   //:margin-top 25px
 
 .lock_icon:hover
@@ -111,4 +115,7 @@ div
   :height 50
   :background
     :image image_url("/images/closed_lock.png")
-    
+
+.lock_button
+  :height 80px
+  :width 65px

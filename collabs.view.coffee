@@ -5,9 +5,14 @@
     div class: 'container', ->
       div id: 'info_panel', class: 'span-24 header', ->
         div id: 'lock_info', ->
-          img id: 'lock', class: 'lock_icon', src: "/images/closed_lock.png", width: "50px"
+          button class: 'button lock_button', id: 'lock_button', onclick: '_GLOBAL.dispatch_toggle_lock_request()', ->
+            img id: 'lock_icon', class: 'lock_icon', src: "/images/closed_lock.png", width: "50px"
+            br()
+            span id: 'lock_span', -> text 'lock'
           div ->
             span id: 'current_editor', ->
+            span class: 'quiet', style: "float:right", ->
+              text 'users:   '
             span id: 'collab_code', ->
               text "#{@code}"
           div id: 'lock_description', class: 'notice', ->
@@ -16,7 +21,6 @@
             text 'Clicking the closed lock will release the file for editing by other users.'
 
         div id: 'user_panel', ->
-          h4 'Viewers:'
           ol id: 'user_list', ->
 
       div id: 'content', class: 'span-24', ->
